@@ -1,35 +1,34 @@
-import java.util.Timer;
+import java.util.Vector;
 
 
 public class Initializator 
 {
-	private Timer timer;
+	private Board board;
+	private RatControler controler;
+	private Vector<CatControler> catsControl;
 	
-	public Initializator()
+	public Initializator(Board board, RatControler controler)
 	{
-		this.timer = new Timer();
+		this.board = board;
+		this.controler = controler;
+		this.catsControl = new Vector<CatControler>();
+		
+		board.getRules().setInitializator(this);
 	}
 	
 	
 	// init the board with ImmovableBlocks, EmptyBlocks and MovableBlocks
-	public void initBoard(Board board)
-	{
-		if (board == null)
-		{
-			System.out.println("Error: Board is null");
-			return;
-		}
-		
-		int sideSize = board.getSideSize();
-		
+	private void initBoard()
+	{		
+		int sideSize = board.getSideSize();		
 		
 		// ImmovableBlocks
 		for (int i = 0; i<sideSize; i++)
 		{
-			board.setPieceAt(new ImmovableBlock(), 0, i);
-			board.setPieceAt(new ImmovableBlock(), sideSize-1, i);
-			board.setPieceAt(new ImmovableBlock(), i, 0);
-			board.setPieceAt(new ImmovableBlock(), i, sideSize-1);			
+			board.putPieceAt(new ImmovableBlock(), 0, i);
+			board.putPieceAt(new ImmovableBlock(), sideSize-1, i);
+			board.putPieceAt(new ImmovableBlock(), i, 0);
+			board.putPieceAt(new ImmovableBlock(), i, sideSize-1);			
 		}
 		
 		// MovableBlocks and EmptyBlocks
@@ -40,38 +39,64 @@ public class Initializator
 			{
 				if (i<freeSpace || i>=sideSize-freeSpace || j<freeSpace || j>=sideSize-freeSpace)
 				{
-					board.setPieceAt(new EmptyBlock(), i, j);
+					board.putPieceAt(new EmptyBlock(), i, j);
 				}
 				else
 				{
-					board.setPieceAt(new MovableBlock(board), i, j);
+					board.putPieceAt(new MovableBlock(board), i, j);
 				}			
 			}
 		}		
 	}
 
-	// add the rat to the board
-	public void addRatToBoard(RatControler ratControl, Board board)
+	
+	private void initControlers()
 	{
+		// put the rat
 		int middle = board.getSideSize() / 2;
-		board.setPieceAt(ratControl.getPiece(),middle, middle);
+		board.putPieceAt(this.controler.getPiece(),middle, middle);
+		
+		// put a cat
+		CatControler catControl = new CatControler(this.board);
+		board.putCatAtRandomPos(catControl.getPiece());
+		this.catsControl.add(catControl);
+		
+		// init the artificial intelligence of the cat
+		catControl.initArtificalIntelligence();
+	}
+	
+	public void resetBoard()
+	{
+		for (CatControler catCont : this.catsControl)
+		{
+			catCont.cancel();
+		}
+		this.catsControl.clear();
+		
+		this.initBoard();
+		this.initControlers();
 	}
 
-	// add a cat to the board
-	public void addCatToBoard(CatControler catControl, Board board) 
+
+	public void terminate() 
 	{
-		// get a free cell
-		Piece empty = board.getRandomEmptyBlock();
-		if (empty == null)
+		for (CatControler catCont : this.catsControl)
 		{
-			System.out.println("No empty space");
-			return;
+			catCont.cancel();
+		}
+		this.catsControl.clear();
+		
+		int sideSize = board.getSideSize();
+		
+		for (int i=0; i<sideSize; i++)
+		{
+			for (int j=0; j<sideSize; j++)
+			{
+				board.putPieceAt(new ImmovableBlock(), i, j);							
+			}
 		}
 		
-		// put the cat
-		board.setPieceAt(catControl.getPiece(), empty.getX(), empty.getY());
-		
-		// start the random movement
-		//this.timer.scheduleAtFixedRate(catControl, 0, 2000);
+		System.out.println(this.board.toString() + "\n============= GAME OVER =============");
 	}
+
 }

@@ -18,12 +18,18 @@ public class RatControler implements KeyListener
 		
 		switch (key)
 		{
-			case KeyEvent.VK_LEFT:
-				this.rat.moveTo(Direction.Left);
-				break;
-			case KeyEvent.VK_RIGHT:
-				this.rat.moveTo(Direction.Right);
-				break;
+		case KeyEvent.VK_LEFT:
+			this.rat.moveTo(Direction.Left);
+			break;
+		case KeyEvent.VK_RIGHT:
+			this.rat.moveTo(Direction.Right);
+			break;
+		case KeyEvent.VK_UP:
+			this.rat.moveTo(Direction.Up);
+			break;
+		case KeyEvent.VK_DOWN:
+			this.rat.moveTo(Direction.Down);
+			break;
 			default:
 				break;				
 		}
@@ -42,7 +48,7 @@ public class RatControler implements KeyListener
 	}
 
 	// return the rat controled by this controler
-	public Piece getPiece() 
+	public Rat getPiece() 
 	{
 		return this.rat;
 	}

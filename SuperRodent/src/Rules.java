@@ -4,14 +4,22 @@ public class Rules
 	private static final int CHEESE_POINTS = 10;
 	
 	private Board board;
-	private PlayerScore playerScore;
-	
+	private PlayerStats playerStats;
+	private Initializator initializator;
 	
 	public Rules(Board board)
 	{
 		this.board = board;
-		this.playerScore = new PlayerScore();
+		this.playerStats = new PlayerStats(3);
 	}
+	
+	
+	// set the initializator in order to restart the game
+	public void setInitializator(Initializator initializator)
+	{
+		this.initializator = initializator;
+	}
+	
 	
 	// switch the two pieces on the board
 	private void switchPieces(Piece p1, Piece p2)
@@ -21,8 +29,8 @@ public class Rules
 		int p2X = p2.getX();
 		int p2Y = p2.getY();
 		
-		this.board.setPieceAt(p1, p2X, p2Y);
-		this.board.setPieceAt(p2, p1X, p1Y);
+		this.board.putPieceAt(p1, p2X, p2Y);
+		this.board.putPieceAt(p2, p1X, p1Y);
 	}
 	
 	
@@ -65,6 +73,21 @@ public class Rules
 	}
 
 	
+	// the player loose a life, board is reset
+	public void playerLooseLife()
+	{
+		this.playerStats.looseLife();
+		if (this.playerStats.canContinue())
+		{
+			this.initializator.resetBoard();
+		}
+		else
+		{
+			this.initializator.terminate();
+		}
+	}
+	
+	
 	// Rules of the game
 	// -------------------------
 	// Rules for cat
@@ -77,8 +100,8 @@ public class Rules
 	
 	public void resolve(Cat fromCat, Rat toRat) 
 	{
-		// game over
-		System.out.println("the game has to stop");
+		// lose a life
+		this.playerLooseLife();
 	}
 
 	public void resolve(Cat fromCat, Cat cat) 
@@ -105,11 +128,18 @@ public class Rules
 	
 	// -------------------------
 	// Rules for rat
+	
+	public void resolve(Rat rat, Cat cat) 
+	{
+		// loose life
+		this.playerLooseLife();
+	}
+	
 	public void resolve(Rat fromRat, Cheese toCheese) 
 	{
 		// the rat eat the cheese and the player gets points
 		this.eat(fromRat, toCheese);
-		this.playerScore.add(Rules.CHEESE_POINTS);
+		this.playerStats.addPoints(Rules.CHEESE_POINTS);
 	}
 
 	public void resolve(Rat fromRat, MovableBlock toMovBlock) 
@@ -164,7 +194,7 @@ public class Rules
 	{
 		// movable block is moved and cheese is eaten
 		this.eat(movableBlock, cheese);
-		this.playerScore.add(CHEESE_POINTS);
+		this.playerStats.addPoints(CHEESE_POINTS);
 	}
 
 	public void resolve(MovableBlock fromMovBlock, MovableBlock toMovBlock) 
@@ -172,11 +202,8 @@ public class Rules
 		this.moveIfPossible(fromMovBlock, toMovBlock);		
 	}
 
-	public void resolve(Rat rat, Cat cat) 
-	{
-		// the rat dies
-		System.out.println("the game has to stop now");
-	}
+	
 
+	
 
 }

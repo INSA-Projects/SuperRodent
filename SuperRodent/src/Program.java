@@ -19,27 +19,20 @@ public class Program
 		
 		
 		
-		
-		
-		
-		
-		Initializator init = new Initializator();
-		
-		// init of the board
+				
+		// board
 		Board board = new Board(23);
-		init.initBoard(board);
 		
-		// init rat controler
+		// rat controler
 		RatControler ratControl = new RatControler(board);		
 		typingArea.addKeyListener(ratControl); // we don't care for sequence diagram
-		init.addRatToBoard(ratControl, board);
-		
-		// init cat controler
-		CatControler catControl = new CatControler(board);
-		init.addCatToBoard(catControl, board);
+
+		// initializator
+		Initializator init = new Initializator(board, ratControl);
+		init.resetBoard();
 		
 		// show the board
-		System.out.println(""+board.toString());
+		System.out.println(board.toString());
 	}
 
 }

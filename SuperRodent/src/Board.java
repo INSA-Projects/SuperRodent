@@ -4,11 +4,13 @@ public class Board
 {
 	private Piece[][] cells;
 	private Rules rules;
+	private Vector<Cat> cats;
 	
 	public Board(int sideSize)
 	{
 		this.cells = new Piece[sideSize][sideSize];
 		this.rules = new Rules(this);
+		this.cats = new Vector<Cat>();
 	}
 	
 	public Rules getRules()
@@ -32,7 +34,7 @@ public class Board
 
 	
 	// put the piece at the given position
-	public void setPieceAt(Piece piece, int x, int y) 
+	public void putPieceAt(Piece piece, int x, int y) 
 	{
 		if (!this.areValidCoordinates(x,y))
 		{
@@ -45,9 +47,18 @@ public class Board
 		piece.setY(y);
 	}
 	
+	// put the cat at a random empty position
+	public void putCatAtRandomPos(Cat cat)
+	{
+		this.cats.addElement(cat);
+		Piece p = this.getRandomEmptyBlock();
+		
+		this.putPieceAt(cat, p.getX(), p.getY());
+	}
+	
 
 	// return an empty block
-	public Piece getRandomEmptyBlock() 
+	private Piece getRandomEmptyBlock() 
 	{
 		Vector<Piece> vec = new Vector<Piece>();
 		for (Piece[] tab : this.cells)
@@ -91,9 +102,16 @@ public class Board
 				leY++;
 				break;
 				
+			case Up:
+				leX--;
+				break;
+				
+			case Down:
+				leX++;
+				break;
+				
 			default:
 				System.out.println("direction not implemented!");
-				return null;
 		}
 		return this.cells[leX][leY];
 	}
@@ -115,6 +133,52 @@ public class Board
 	}
 	
 
+	// put a cheese instead of a trapped cat
+	public void checkTrappedCats() 
+	{
+		/*
+		 
+		Vector<Cat> trappedCats = new Vector<Cat>();
+		
+		for (Cat cat : this.cats)
+		{
+			int catx = cat.getX();
+			int caty = cat.getY();
+			boolean trapped = true;
+			
+			for (int i = catx-1; trapped && i<catx+1;i++)
+			{
+				for (int j = caty-1; trapped && j<caty+1;j++)
+				{
+					if (i==j)
+					{
+						continue;
+					}
+					if(this.cells[i][j] instanceof EmptyBlock)
+					{
+						trapped = false;
+					}
+				}
+			}
+			if (trapped)
+			{
+				System.out.println("Cat is trapped");
+				trappedCats.add(cat);
+			}
+		}
+		
+		for (Cat cat : trappedCats)
+		{
+			this.cats.remove(cat);
+			int catx = cat.getX();
+			int caty = cat.getY();
+			this.putPieceAt(new Cheese(), catx, caty);
+		}
+		
+		*/
+	}
+
+	
 	// just for printing
 	public String toString()
 	{
@@ -156,10 +220,6 @@ public class Board
 		return res;
 	}
 
-	public void checkTrappedCats() 
-	{
-		System.out.println("Check if traped cat has to be launched");
-	}
 
 	
 }
