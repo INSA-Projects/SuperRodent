@@ -19,9 +19,9 @@ public class CatSpawner extends TimerTask
 		this.init.initNewCat();
 	}
 
-	public void start() 
+	public void start(int period) 
 	{
-		this.timer.schedule(this, 0, 4000);
+		this.timer.schedule(this, period * 1000, period * 1000);
 	}
 
 }

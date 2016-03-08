@@ -1,17 +1,22 @@
+import java.util.HashSet;
+
 
 public class Rules 
 {
 	private static final int CHEESE_POINTS = 10;
+	public static final int CAT_SPAWN_DELAY = 5;
 	
 	private Board board;
 	private PlayerStats playerStats;
 	private Initializator initializator;
+	private TrapBox trapBox;
 	
 	public Rules(Board board)
 	{
 		this.board = board;
 		this.playerStats = new PlayerStats(3);
 	}
+	
 	
 	// return the stats of the player
 	public PlayerStats getStats()
@@ -131,6 +136,28 @@ public class Rules
 		this.eat(fromCat, toCheese);
 	}
 
+	public void updateTrapCat(Cat cat, boolean trapped) 
+	{
+		if (trapped)
+		{
+			cat.getTrap().choke(5);
+		}
+		else
+		{
+			cat.releaseTrap();;
+		}
+	}
+	
+	// change the cat by a piece of cheese
+	public void disposeOfBody(Cat deadCat) 
+	{
+		int catx = deadCat.getX();
+		int caty = deadCat.getY();
+		
+		this.initializator.stopCatControler(deadCat);
+		
+		this.board.putPieceAt(new Cheese(), catx, caty);
+	}
 	
 	// -------------------------
 	// Rules for rat
@@ -152,6 +179,7 @@ public class Rules
 	{
 		// move the blocks if possible
 		this.moveIfPossible(fromRat, toMovBlock);
+		this.board.checkTrappedCats();
 	}
 
 	public void resolve(Rat rat, ImmovableBlock immoBlock) 
@@ -191,10 +219,8 @@ public class Rules
 
 	public void resolve(MovableBlock movableBlock, EmptyBlock empty) 
 	{
-		// the movable block is moved and a check is launched to see if a cat is traped
-		this.switchPieces(movableBlock, empty);
-		
-		this.board.checkTrappedCats();
+		// the movable block is moved
+		this.switchPieces(movableBlock, empty);		
 	}
 
 	public void resolve(MovableBlock movableBlock, Cheese cheese) 
@@ -208,6 +234,12 @@ public class Rules
 	{
 		this.moveIfPossible(fromMovBlock, toMovBlock);		
 	}
+
+
+	
+
+
+	
 
 	
 

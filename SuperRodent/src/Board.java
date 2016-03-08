@@ -94,24 +94,37 @@ public class Board
 		
 		switch (dir)
 		{
+			case Up:
+				leX--;
+				break;				
+			case RightUp:
+				leX--;
+				leY++;
+				break;
+			case Right:
+				leY++;
+				break;				
+			case RightDown:
+				leY++;
+				leX++;
+				break;				
+			case Down:
+				leX++;
+				break;				
+			case LeftDown:
+				leX++;
+				leY--;
+				break;
 			case Left:
 				leY--;
 				break;
-				
-			case Right:
-				leY++;
-				break;
-				
-			case Up:
+			case LeftUp:
+				leY--;
 				leX--;
 				break;
 				
-			case Down:
-				leX++;
-				break;
-				
 			default:
-				System.out.println("direction not implemented!");
+				System.out.println("direction not implemented: " + dir.toString());
 		}
 		return this.cells[leX][leY];
 	}
@@ -133,51 +146,31 @@ public class Board
 	}
 	
 
-	// put a cheese instead of a trapped cat
+	
+	// check if there are cats trapped
 	public void checkTrappedCats() 
 	{
-		/*
-		 
-		Vector<Cat> trappedCats = new Vector<Cat>();
-		
 		for (Cat cat : this.cats)
 		{
-			int catx = cat.getX();
-			int caty = cat.getY();
-			boolean trapped = true;
-			
-			for (int i = catx-1; trapped && i<catx+1;i++)
-			{
-				for (int j = caty-1; trapped && j<caty+1;j++)
-				{
-					if (i==j)
-					{
-						continue;
-					}
-					if(this.cells[i][j] instanceof EmptyBlock)
-					{
-						trapped = false;
-					}
-				}
-			}
-			if (trapped)
-			{
-				System.out.println("Cat is trapped");
-				trappedCats.add(cat);
-			}
+			this.rules.updateTrapCat(cat, this.isTrapped(cat));
 		}
-		
-		for (Cat cat : trappedCats)
-		{
-			this.cats.remove(cat);
-			int catx = cat.getX();
-			int caty = cat.getY();
-			this.putPieceAt(new Cheese(), catx, caty);
-		}
-		
-		*/
 	}
 
+	// returns true if the given cat is surrounded by blocks
+	public boolean isTrapped(Cat cat)
+	{
+		int catx = cat.getX();
+		int caty = cat.getY();
+		boolean trapped = true;
+		
+		for (Direction dir : Direction.values())
+		{
+			Piece p = this.getAdjacentPiece(catx, caty, dir);
+			trapped = trapped && (p instanceof MovableBlock || p instanceof ImmovableBlock);
+		}
+		
+		return trapped;
+	}
 	
 	// just for printing
 	public String toString()
@@ -196,7 +189,7 @@ public class Board
 				{
 				case "ImmovableBlock":
 					res += "[I]";
-					break;
+					break;				
 				case "MovableBlock":
 					res += "[M]";
 					break;
@@ -208,6 +201,9 @@ public class Board
 					break;
 				case "Cat":
 					res += "[C]";
+					break;
+				case "Cheese":
+					res += "[F]";
 					break;
 				default:
 					res += "[?]";

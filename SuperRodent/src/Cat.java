@@ -2,11 +2,20 @@
 public class Cat extends Piece 
 {
 	private Board board;
+	private TrapBox box;
 	
 	public Cat(Board board)
 	{
 		this.board = board;
+		this.box = new TrapBox(board.getRules(), this);
 	}
+	
+	// return the trap box of the cat
+	public TrapBox getTrap()
+	{
+		return this.box;
+	}
+	
 	
 	// move the piece to the direction dir
 	public void moveTo(Direction dir)
@@ -15,7 +24,15 @@ public class Cat extends Piece
 		p.accept(this);
 		
 		// show the board
-		System.out.println(this.board.toString());		
+		System.out.println(this.board.toString());	
+		
+	}
+	
+
+	public void releaseTrap() 
+	{
+		this.box.cancel();
+		this.box = new TrapBox(this.board.getRules(), this);
 	}
 
 	// Visitor pattern
@@ -60,5 +77,6 @@ public class Cat extends Piece
 	{
 		this.board.getRules().resolve(this, cheese);		
 	}
+
 
 }

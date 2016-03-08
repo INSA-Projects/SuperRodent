@@ -91,7 +91,7 @@ public class Initializator
 		// reset spawner
 		this.catSpawner.cancel();
 		this.catSpawner = new CatSpawner(this);
-		this.catSpawner.start();
+		this.catSpawner.start(Rules.CAT_SPAWN_DELAY);
 		
 		System.out.println(this.board.getRules().getStats().toString());
 	}
@@ -119,6 +119,20 @@ public class Initializator
 		
 		System.out.println(this.board.getRules().getStats().toString());
 		System.out.println(this.board.toString() + "\n============= GAME OVER =============");
+	}
+
+
+	// stop the cat controler associated to the dead cat
+	public void stopCatControler(Cat deadCat) 
+	{
+		for (CatControler catCont : this.catsControl)
+		{
+			if (catCont.getPiece() == deadCat)
+			{
+				System.out.println("Controler of dead cat turned off");
+				catCont.cancel();
+			}
+		}
 	}
 
 }
