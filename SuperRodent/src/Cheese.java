@@ -1,5 +1,13 @@
 
-public class Cheese extends Piece {
+public class Cheese extends Piece 
+{
+
+	@Override
+	public void moveTo(Direction dir) 
+	{
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void accept(Piece p) 
@@ -42,5 +50,6 @@ public class Cheese extends Piece {
 		// TODO Auto-generated method stub
 
 	}
+
 
 }

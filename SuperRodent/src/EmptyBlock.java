@@ -2,6 +2,12 @@
 public class EmptyBlock extends Piece 
 {
 
+	@Override
+	public void moveTo(Direction dir) {
+		// TODO Auto-generated method stub
+		
+	}
+	
 	// Visitor pattern
 	@Override
 	public void accept(Piece p) 
@@ -44,5 +50,6 @@ public class EmptyBlock extends Piece
 		// TODO Auto-generated method stub
 		
 	}
+
 
 }

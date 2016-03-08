@@ -72,6 +72,6 @@ public class Initializator
 		board.setPieceAt(catControl.getPiece(), empty.getX(), empty.getY());
 		
 		// start the random movement
-		this.timer.scheduleAtFixedRate(catControl, 0, 2000);
+		//this.timer.scheduleAtFixedRate(catControl, 0, 2000);
 	}
 }

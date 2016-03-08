@@ -17,6 +17,20 @@ public class Board
 	}
 	
 
+	// return the size of the board
+	public int getSideSize() 
+	{		
+		return this.cells.length;
+	}
+
+
+	// return true if x and y are valid coordinates in the board
+	private boolean areValidCoordinates(int x, int y)
+	{
+		return x>0 && y>0 && x<this.cells.length || x<this.cells.length;
+	}
+
+	
 	// put the piece at the given position
 	public void setPieceAt(Piece piece, int x, int y) 
 	{
@@ -31,13 +45,6 @@ public class Board
 		piece.setY(y);
 	}
 	
-
-	// return the size of the board (23)
-	public int getSideSize() 
-	{		
-		return this.cells.length;
-	}
-
 
 	// return an empty block
 	public Piece getRandomEmptyBlock() 
@@ -54,6 +61,10 @@ public class Board
 			}
 		}
 		
+		if (vec.isEmpty())
+		{
+			return null;
+		}
 		return vec.firstElement();
 	}
 
@@ -73,26 +84,36 @@ public class Board
 		switch (dir)
 		{
 			case Left:
-				leX--;
+				leY--;
 				break;
 				
 			case Right:
-				leX++;
+				leY++;
 				break;
 				
 			default:
-				System.out.println("unknown direction!");
+				System.out.println("direction not implemented!");
 				return null;
 		}
 		return this.cells[leX][leY];
 	}
 	
-	
-	// return true if x and y are valid coordinates in the board
-	private boolean areValidCoordinates(int x, int y)
-	{
-		return x>0 && y>0 && x<this.cells.length || x<this.cells.length;
+
+	// return true if the movableBlock is movable in the direction dir
+	public boolean blockIsMovable(MovableBlock movBlock, Direction dir) 
+	{		
+		Piece p = this.getAdjacentPiece(movBlock.getX(), movBlock.getY(), dir);		
+		if (p instanceof EmptyBlock)
+		{
+			return true;
+		}
+		if (p instanceof MovableBlock)
+		{			
+			return this.blockIsMovable((MovableBlock) p, dir);
+		}
+		return false;		
 	}
+	
 
 	// just for printing
 	public String toString()
@@ -134,4 +155,11 @@ public class Board
 		}
 		return res;
 	}
+
+	public void checkTrappedCats() 
+	{
+		System.out.println("Check if traped cat has to be launched");
+	}
+
+	
 }

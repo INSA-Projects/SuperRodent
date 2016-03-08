@@ -3,7 +3,6 @@ public abstract class Piece
 {
 	private int x = -1;
 	private int y = -1;
-	private Board board;
 	
 	public int getX()
 	{
@@ -25,6 +24,10 @@ public abstract class Piece
 		this.y = y;
 	}
 
+	// move function
+	public abstract void moveTo(Direction dir);
+	
+	
 	// accept of Visitor pattern
 	public abstract void accept(Piece p);
 
@@ -36,6 +39,10 @@ public abstract class Piece
 	public abstract void visit(EmptyBlock empty);
 	public abstract void visit(Cheese cheese);
 	
-	
+	// to string
+	public String toString()
+	{
+		return this.getClass().toString() + " (" + this.x + "," + this.y + ")";
+	}
 	
 }

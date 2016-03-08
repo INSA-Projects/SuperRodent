@@ -19,7 +19,10 @@ public class RatControler implements KeyListener
 		switch (key)
 		{
 			case KeyEvent.VK_LEFT:
-				System.out.println("left");
+				this.rat.moveTo(Direction.Left);
+				break;
+			case KeyEvent.VK_RIGHT:
+				this.rat.moveTo(Direction.Right);
 				break;
 			default:
 				break;				

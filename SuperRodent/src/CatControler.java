@@ -20,6 +20,6 @@ public class CatControler extends TimerTask
 	@Override
 	public void run() 
 	{
-		this.cat.moveTo(Direction.Right);
+		this.cat.moveTo(Direction.Right);		
 	}
 }
