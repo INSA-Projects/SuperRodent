@@ -13,12 +13,18 @@ public class Rules
 		this.playerStats = new PlayerStats(3);
 	}
 	
+	// return the stats of the player
+	public PlayerStats getStats()
+	{
+		return this.playerStats;
+	}
 	
 	// set the initializator in order to restart the game
 	public void setInitializator(Initializator initializator)
 	{
 		this.initializator = initializator;
 	}
+	
 	
 	
 	// switch the two pieces on the board
@@ -187,6 +193,7 @@ public class Rules
 	{
 		// the movable block is moved and a check is launched to see if a cat is traped
 		this.switchPieces(movableBlock, empty);
+		
 		this.board.checkTrappedCats();
 	}
 

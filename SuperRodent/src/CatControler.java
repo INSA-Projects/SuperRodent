@@ -21,7 +21,7 @@ public class CatControler extends TimerTask
 	// init the timer for random movement
 	public void initArtificalIntelligence()
 	{
-		this.timer.scheduleAtFixedRate(this, 0, 3000);
+		this.timer.scheduleAtFixedRate(this, 0, 2000);
 	}
 	
 	
